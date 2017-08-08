@@ -1,0 +1,292 @@
+<html>
+<head>
+<script>
+    
+   
+    
+    var id = eidpre.value;
+    var fecha ="";
+    var cliente = eclientepre.value;
+    var monto = emontopre.value;
+    var cuota = ecuotapre.value;
+    var mxd = emxdpre.value;
+    var direccion = edireccionpre.value; 
+    var telefono = etelefonopre.value;
+    
+$(document).ready(function() 
+{
+    
+    llenar();
+           
+});
+
+    
+function resta_fechas(f1,f2)
+{
+    
+    var aFecha1 = f1.split('-'); 
+    var aFecha2 = f2.split('-');  
+    var fFecha1 = Date.UTC(aFecha1[0],aFecha1[1]-1,aFecha1[2]); 
+    var fFecha2 = Date.UTC(aFecha2[0],aFecha2[1]-1,aFecha2[2]); 
+    var dif = fFecha2 - fFecha1;
+    //alertify.alert(dif);
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    return dias;
+ }    
+    
+    
+    
+function extra(prestamo, mora)
+{
+    
+    
+    db.transaction(function(tx)
+                 {
+                    var sql = "select MAX(Cuota) as Maxima, MIN(Cuota) as Minima, SUM(Capital + Interes - Pagado) as Total, MAX(Fecha) as Vence  from dprestamo where Prestamo = " +  prestamo + " and ((Capital + Interes) - Pagado) > 0  Order by Cuota" ;
+                    tx.executeSql( sql, [],function(tx, resultado)
+                                  {
+                                    var moras = 0;
+        
+                                    var fech = resultado.rows.item(0).Vence;
+                                    var fec = fech.split('-')
+                                    var fechaf = "" + fec[2] + "/" + fec[1] + "/" + fec[0];
+    
+                                    $('#evencep').html(fechaf);
+                                    //
+                                    $('#esaldop').html('<strong>' + formatNumber.new(resultado.rows.item(0).Total + mora) + '</strong>');    
+                                    esaldopre.value = resultado.rows.item(0).Total + mora;
+                    
+                                  }
+                                  
+                                  
+                                  
+                                  
+                                  , errordb );}, errordb);
+    
+    
+}    
+    
+    
+function llenar()
+{
+    
+    var f = new Date();
+    fecha = "" + f.getFullYear() + "-" + ("0" + (f.getMonth() + 1)).slice(-2) + "-" + ("0" + f.getDate()).slice(-2) + "" ;
+    
+    db.transaction(function(tx)
+                 {
+                    var sql = "select *, (Capital + Interes) as Total, ((Capital + Interes) - Pagado) as Monto  from dprestamo where Prestamo = " +  id + " and ((Capital + Interes) - Pagado) > 0 and Fecha <= '" + fecha + "' Order by Cuota" ;
+                   
+                    tx.executeSql( sql, [],function(tx, resultado)
+                                    {
+                                        
+    var moras = 0;
+    var interes = 0;
+    var capital = 0;
+    var pagado = 0;
+    var total = 0;
+    var primero = 0;
+    var dias = 0;
+    var moras = 0;
+    for(a=0;a<resultado.rows.length;a++)                     
+    {
+        var mora = 0;
+        var fech = resultado.rows.item(a).Fecha;
+        var fec = fech.split('-')
+        var fechaf = "" + fec[2] + "/" + fec[1] + "/" + fec[0];
+        //var dow = dia_semana(fechaf);
+        
+        //$mora = ($registro['Dias']) * floor($prestamo['Monto'] / 1000 );
+       // if((a==0 && dow > 0) || (a==1 && dow == 1))
+        if(a==0)
+        {
+            //alertify.alert(fecha);
+            var f1 = resultado.rows.item(a).Fecha;
+            var f2 = fecha;
+            var d = 0;
+           
+            var aFecha1 = f1.split('-'); 
+            var aFecha2 = f2.split('-');
+            
+            
+            
+            var fFecha1 = Date.UTC(aFecha1[0],aFecha1[1]-1,aFecha1[2]); 
+            var fFecha2 = Date.UTC(aFecha2[0],aFecha2[1]-1,aFecha2[2]); 
+            var dif = fFecha2 - fFecha1;
+    //alertify.alert(dif);
+            var d = Math.floor(dif / (1000 * 60 * 60 * 24));
+            
+            
+            if(d > 2)
+            {
+                dias = resta_fechas(resultado.rows.item(a).Fecha, fecha);
+                mora = dias  * (monto / 1000);
+                moras = mora;
+            }
+            else
+            {
+                dias = 0;
+            }
+            mora = 0;
+            moras = 0;
+        
+        }
+      //  alert(dias);
+        //alert(resultado.rows.item(a).Cuota + 'llll' +  resultado.rows.length);
+        
+        /*if(dias > 28)
+        {
+           //if ((a==0 && dow > 0) || (a==1 && dow == 1))
+            if(a==0)
+         {
+            //diasp = dias - 28; 
+            mora = Math.round((monto * 0.1));
+            moras = mora;
+         }
+        }*/
+        
+        interes += resultado.rows.item(a).Interes;
+	    capital += resultado.rows.item(a).Capital;
+	    pagado  += resultado.rows.item(a).Pagado;
+        total += resultado.rows.item(a).Monto;
+       
+        
+    }
+    
+    evencido.value = capital + interes - pagado;
+    emora.value = moras;
+    etotal.value = total + moras;
+     //alertify.alert(resultado.rows.item(resultado.rows.length-1).Fecha);
+    if(resultado.rows.length > 0)
+    {
+     $('#ecactual').html(resultado.rows.item(0).Cuota);
+     $('#emontocuo').html(resultado.rows.item(0).Total);                    
+     $('#eplazop').html(cuota);
+     $('#eabonop').html(resultado.rows.item(0).Pagado);                  
+     //$('#evencep').html(fechaf);
+     $('#eatrasosp').html(total / (monto / 10) - 1);                    
+     
+    }
+    else
+    {
+     $('#ecactual').html(0);
+     $('#emontocuo').html(0);                    
+     $('#eplazop').html(cuota);
+     $('#eabonop').html(0);                  
+    // $('#evencep').html(fechaf);   
+    }
+                        
+     $('#etotalatrasop').html('<strong>' + formatNumber.new(total) + '</strong>');
+     $('#emorap').html('<strong>' + formatNumber.new(moras) + '</strong>');
+     $('#etotalp').html('<strong>' + formatNumber.new(total + moras) + '</strong>');
+    //alertify.alert(resultado.rows.item(0).Fecha);                    
+    extra(id,moras)  ;
+        
+    eprestamop.value = id;
+    enombrep.value = cliente;
+    $('#enombrepd').html(cliente);
+    $('#eprestadop').html(formatNumber.new(monto));
+    $('#etelefonop').html(':' + telefono);
+    $('#edireccionp').html(direccion);
+    ecuotap.value = cuota;
+    //$.afui.loadContent("#pago",false,false,"slide");*/
+                                  }
+                                  
+                                  
+                                  
+                                  
+                                  , errordb );}, errordb2); 
+    
+    
+}
+    
+</script>    
+    
+</head>
+<body>
+    
+            <input name="eprestamop" id="eprestamop" type="hidden"  />
+            <input name="evencido" id="evencido" type="hidden"/>
+            <input name="emora" id="emora" type="hidden"  />
+            <input name="etotal" id="etotal" type="hidden"  />
+            <input name="enombrep" id="enombrep" type="hidden"  />
+            <input name="enombrep" id="ecuotap" type="hidden"  />
+            <div style="width:100%; text-align:center; background-color:#000; color:#FFF; font-size:20px;" id="enombrepd"></div>
+            <div style="width:60%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eprestadop">  </div> 
+            <div style="width:40%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="etelefonop">809-588-4457</div>
+            <div style="text-align:center; font-size:12px; border:1px; border-style:solid;" id="edireccionp"></div>
+            <br>
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">CUOTA:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="ecactual"> </div>
+            
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">MONTO:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="emontocuo"> </div>
+            
+            
+            <br>
+            
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">PLAZO:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eplazop"> </div>
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">ABONO:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eabonop"> </div>
+            
+            
+            
+            <br>
+            
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">ATRASO:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eatrasosp"> </div>
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">VENCE:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="evencep"> </div>
+            
+            <br>
+            <br>
+            
+    
+            
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">BALANCE DE SALDO :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; background-color: #DADADA;" id="esaldop"> </div>
+           
+            <br>
+            <br>
+            <div style="font-size:16px; border:1px; border-style:solid; background-color:#61B0F0; height:100px; clear:both; " >
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">TOTAL VENCIDO :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; color: #FB0000;" id="etotalatrasop"> </div>
+                
+            <br>
+            
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">MORA :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; color:" id="emorap"> </div>
+        
+            <br>
+            
+            <div style="width:50%; font-size:20px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">TOTAL A PAGAR :</div>
+            <div style="width:50%; font-size:20px; float:left; border:1px; border-style:solid; text-align: right; color:#1C945A" id="etotalp"> </div>
+                          
+            </div>
+            
+            
+            <br>
+             <div style="width:30%; font-size:32px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; text-align: right; ">$</div>
+            <div style="width:70%; text-align:right; float:left;"><input name="epago" id="epago" type="number" style="text-align:right; font-size:40px;"/></div>
+                
+            <div> 
+            <br>
+            <br>
+            <br>
+            <br>
+            <p align="center">
+            <button class="btn-large waves-effect black" style="font-size:24px;"  name="action" onclick="evalua_pago();">COBRAR</button>
+           </p> 
+           
+</body>
+</html>

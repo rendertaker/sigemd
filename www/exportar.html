@@ -1,0 +1,66 @@
+<html>
+<head>
+<script>
+    $(document).ready(function() {
+            datos_cuadre();
+           
+        });
+
+</script>    
+</head>
+<body>
+<div class="row">
+    <div class="input-field col s12">
+        <input value="" id="ecapitalc" type="text" style="text-align:right;" disabled>
+        <label for="ecapitalc">CAPITAL</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input value="" id="einteresc" type="text" style="text-align:right;" disabled>
+        <label for="einteresc">INTERES</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input value="" id="emorac" type="text" style="text-align:right;" disabled>
+        <label for="emorac">MORA</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input value="" id="etotalc" type="text" style="text-align:right;" disabled>
+        <label for="etotalc">TOTAL</label>
+    </div>
+</div>
+
+
+<div id="ddetalle_pago">
+</div>    
+    
+
+    
+    
+    
+<p align="center">
+    <button class="btn-large waves-effect blue"   onclick="imprime_cuadre();" style="height:60px;" ><img src="icon/printw.png" />IMPRIMIR CUADRE</button>
+</p>
+<br>
+<br>
+<br>
+<br>
+<p align="center">
+    <button class="btn-large waves-effect blue"   onclick="exportar_Cuadre();" >EXPORTAR</button>
+</p>
+
+
+    
+    
+    <textarea id="imprip" cols="50" rows="10"></textarea>    
+    
+    
+<div id="barraeaccion" style="text-align:center">  </div>
+<div id="barrae" style="text-align:center">  </div>
+<div id="barrae2" style="text-align:center">  </div>
+</body>
+</html>

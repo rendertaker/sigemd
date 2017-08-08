@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+<!--
+    This template can be used for creating apps that require user login and user registration before starting actual app.
+--> 
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0; charset=utf-8"  />
+    
+    <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="appframework/af.ui.css" />
+    <link rel="stylesheet" type="text/css" href="appframework/icons.css" />
+    <link rel="stylesheet" type="text/css" href="materialize/css/materialize.css" />
+
+    <script type="text/javascript" charset="utf-8" src="appframework/appframework.ui.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="materialize/js/materialize.min.js"></script>
+    
+    
+
+    <!-- phantom library, needed for XDK "legacy" container api calls -->
+    <script src="intelxdk.js"></script>
+    <!-- phantom library, needed for Cordova api calls -->
+    <script src="cordova.js"></script>
+    <!-- phantom library, needed for XDK "legacy" container CORS -->
+    <script src="xhr.js"></script>
+    <script src="js/inicio.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/configuracion.js"></script>
+    <script src="js/cxc.js"></script>
+    <script src="js/sincronizar.js"></script>
+    <script src="js/impresion.js"></script>
+    <script src="js/gastos.js"></script>
+    <script src="js/ingresos.js"></script>
+    <style>
+    .azul {color:blue;}
+    .negro {color:black;}
+    
+    </style>
+   
+        
+    <script>
+        var onDeviceReady=function(){                             // called when Cordova is ready
+           if( window.Cordova && navigator.splashscreen ) {     // Cordova API detected
+               $.afui.launch(); 
+              
+               navigator.splashscreen.hide() ; // hide splash screen
+               
+            }
+            
+            inicializa(0);
+        } ;
+        document.addEventListener("deviceready", onDeviceReady, false) ;
+    </script>
+    
+    <script>   
+        $.afui.autoLaunch = false; 
+        $.afui.backButtonText = "Back";
+        $.afui.setBackButtonVisibility(false);
+    
+      
+        $.afui.useOSThemes=false;
+        $(document).ready(function(){
+            $.afui.launch();
+            
+           // euuid.value = intel.xdk.device.uuid;
+           // euuid.value = intel.xdk.device.uuid;
+            // setup signin and signup button events
+            
+            
+            //setInterval(sincronizar, 60000);
+            
+             $('#enombrepre').on('keyup', function(e) {
+                var mEvent = e || window.event;
+                var mPressed = mEvent.keyCode || mEvent.which;
+                if (mPressed == 13) {
+                    
+                    busca_prestamo();
+                    return false;
+                } 
+                return true;
+            });
+           
+             $("#bimprimec").on("click", function(){
+               imprime_cuadre();
+            });
+            
+             $("#bimprimei").on("click", function(){
+               imprime_ingresos();
+            });
+            
+             $("#bimprimeg").on("click", function(){
+               imprime_gastos();
+            });
+            
+            $("#bexportar").on("click", function(){
+               exportar();
+            });
+            
+
+            
+            $("#reimprimir").on("click", function(){
+               reimprimir();
+               $.afui.loadContent("#lpagos",false,false,"slide");
+            });
+            
+            
+            $("#bpagar").on("click", function(){
+               pagar();
+            });
+            
+            
+             $("#bguardaconf").on("click", function(){
+               guarda_configuracion();
+            });
+            
+            
+            $("#conf").on("click", function(){
+               configurar();
+            });
+            
+            
+            $("#bnota").on("click", function(){
+               guarda_nota();
+            });
+            
+            $("#bgastos").on("click", function(){
+               guarda_gastos();
+            });
+            
+            
+             $("#bingresos").on("click", function(){
+               guarda_ingresos();
+            });
+            
+            $("#lcuadre").on("click", function(){
+                datos_cuadre();
+                $('#barraeaccion').html('');
+                $('#barrae').html('');
+                $('#barrae2').html('');
+                $.afui.loadContent("#exportar",false,false,"slide");
+            });
+            
+            
+            
+              $("#limportar").on("click", function(){
+                $('#barraaccion').html('');
+                $('#barra').html('');
+                $('#barra2').html('');
+                $.afui.loadContent("#importar",false,false,"slide");
+            });
+            
+           
+            $("#sinc").on("click", function(){
+                $('#barraaccions').html('');
+                $('#barras').html('');
+                
+                $.afui.loadContent("#sincronizar",false,false,"slide");
+            });
+            
+            
+            
+            
+             $("#cxc").on("click", function(){
+               cxc();
+            });
+            
+            $("#gastos").on("click", function(){
+               busca_gastos();
+               gastos();
+            });
+            
+            $("#ingresos").on("click", function(){
+               busca_ingresos();
+               ingresos();
+            });
+            
+            
+             $("#adm").on("click", function(){
+               loginconf();
+            });
+            
+              $("#bloginconf").on("click", function(){
+               validaloginconf();
+            });
+            
+            
+             $("#bimportar").on("click", function(){
+               importar();
+            });
+            
+             $("#bsincronizar").on("click", function(){
+               sincronizar();
+            });
+            
+            
+            $("#login").on("click", function(){
+               login();
+            });
+            
+            $("#register").on("click", function(){
+                signUp();
+            });
+            
+            
+            $("#probar").on("click", function(){
+                probar();
+                
+            });
+            
+            $('#evalor').on('keyup', function(e) {
+                var mEvent = e || window.event;
+                var mPressed = mEvent.keyCode || mEvent.which;
+                if (mPressed == 13) {
+                    guardajugada();
+                    return false;
+                } 
+                return true;
+            });
+            
+            
+             $('#ejugada').on('keyup', function(e) {
+                var mEvent = e || window.event;
+                var mPressed = mEvent.keyCode || mEvent.which;
+                if (mPressed == 13) {
+                    evalor.focus();
+                    return false;
+                } 
+                return true;
+            });
+            
+        
+            
+             $("#loteria").on("click", function(){
+                $.afui.loadContent("#venta",false,false,"slide");
+                 $('.fventa').remove();
+                        var html= '<footer class="fventa"><a href="javascript:limpia_venta();" class="icon paper">Limpiar</a><a class="icon upload" href="javascript:evalua_ticket();">Guardar</a><a href="javascript:menu();" class="icon home">Volver</a></footer>';
+                        $("#dafui").append(html);
+                   $.afui.clearHistory();
+                
+            });
+            
+            
+        });
+                
+               
+                
+        function startApp(){
+            // clears all back button history
+            $.afui.clearHistory();  
+            
+            // your app code here
+        }
+
+       
+    </script>   
+</head>
+<body> 
+<div id="dafui" class="view">
+<header>
+    <h1>SIGE</h1>
+</header>
+    <div id="content" class="pages android light"> 
+     
+       <ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="images/office.jpg">
+      </div>
+      <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+      <a href="#!name"><span class="white-text name">John Doe</span></a>
+      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+    </div></li>
+    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Subheader</a></li>
+    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+  </ul>
+  <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        
+    <!-- vistas -->
+        
+        
+        <!-- Vista del Menu Principal -->
+        <div class="panel"  id="menup" title="SIGE MOVIL 0.9">
+            <div style="text-align:center">
+                
+             
+                
+            <br>
+            <br>
+            <br>
+            <br>
+            </div>
+            <ul class="list">
+                <li><a href="#" id="cxc">Cuentas Por Cobrar</a></li>
+                <li><a href="#" id="reimprimir">Reimprimir Recibo</a></li>
+                <li><a href="#" id="adm">Administración</a></li>
+                <li><a href="#" id="gastos">Gastos</a></li>
+                <li><a href="#" id="ingresos">Otros Ingresos</a></li>
+                <li><a href="#" id="conf">Configuración</a></li>
+            </ul>     
+            
+          <!--  <textarea id="comandos" cols="30" rows="20"></textarea> 
+            
+            <br>
+            <br>
+            
+            <a class="button block" href="#" id="im" onclick="imprifull();">Imprimir</a>-->
+            
+            <p style="text-align:center; color:blue">Iconlabs 849-210-4457</p>
+        </div>
+        
+        
+         <!-- Vista del Login administracion -->
+        <div class="panel"  id="loginconf" title="LOGIN ADMINISTRACION">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <p>Iniciar Session</p>
+            <br>
+            <br>
+            </div>
+            <input name="enombreconf" id="enombreconf" type="text" placeholder="Usuario" />
+            <input name="eclaveconf" id="eclaveconf" type="password" placeholder="Clave" />
+            <a class="button block" href="#" id="bloginconf">Login</a>
+           <br> 
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+         <!-- Vista del menu de administracion -->
+        <div class="panel"  id="menuadm" title="ADMINISTRACION">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <br>
+            <br>
+            </div>
+            <ul class="list">
+                <li><a href="#" id="limportar">Importar</a></li>
+                <li><a href="#" id="lcuadre">Cuadre</a></li>
+            </ul> 
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+         <!-- Vista del IMPORTAR -->
+        <div class="panel"  id="importar" title="Importar">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <div id="dzona"></div>
+            <br>
+            <br>
+            </div>
+            <a class="button block" href="#" id="bimportar">Importar</a>
+            <br> 
+            <br>
+            <br>
+            <div id="barraaccion" style="text-align:center">  </div>
+            <div id="barra" style="text-align:center">  </div>
+            <div id="barra2" style="text-align:center">  </div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+        
+        
+         <!-- Vista del sincronizar -->
+        <div class="panel"  id="sincronizar" title="Sincronizar">
+            <div style="text-align:center">
+            <br>
+            <br>
+            </div>
+            <a class="button block" href="#" id="bsincronizar">Sincronizar</a>
+            <br> 
+            <br>
+            <br>
+            <div id="barra2s" style="text-align:center">  </div>
+            <div id="barras" style="text-align:center">  </div>
+            <div id="barraaccions" style="text-align:center">  </div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <!-- Vista del EXPORTAR -->
+        <div class="panel"  id="exportar" title="Exportar">
+            <div style="text-align:center">
+              <br>
+            <br>
+            <br>   
+            <div style="width:30%; float:left;">Capital</div><div style="width:70%; float:left;"><input name="ecapitalc" id="ecapitalc" type="text" disabled style="text-align:right;"/></div>
+            <br>
+            <div style="width:30%; float:left;">Interes</div><div style="width:70%; float:left;"><input name="einteresc" id="einteresc" type="text" disabled style="text-align:right;" /></div>
+            <br>
+            <div style="width:30%; float:left;">Mora</div><div style="width:70%; float:left; "><input name="emorac" id="emorac" type="text" disabled style="text-align:right;" /></div>
+            <br>
+            <div style="width:30%; float:left;">Total</div><div style="width:70%; float:left;"><input name="etotalc" id="etotalc" type="text" disabled style="text-align:right;" /></div>
+                <div style="width:100%;" align="right">  - </div>
+            <br>
+            <br>
+            <br>            
+            </div>
+            
+            <div id="ddetalle_pago"></div>
+            <br>
+            <br>
+            <br>
+            
+            
+            
+            <a class="button block" href="#" id="bimprimec">Imprimir Cuadre</a>
+            
+            <br> 
+            <br>
+            <br>
+            
+            <a class="button block" href="#" id="bimprimei">Imprimir Ingresos</a>
+            
+            <br> 
+            <br>
+            <br>
+            
+            <a class="button block" href="#" id="bimprimeg">Imprimir Gastos</a>
+            
+            <br> 
+            <br>
+            <br>
+            
+            
+             <a class="button block" href="#" id="bexportar">Exportar</a>
+            
+            <div id="barraeaccion" style="text-align:center">  </div>
+            <div id="barrae" style="text-align:center">  </div>
+            <div id="barrae2" style="text-align:center">  </div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        <!-- Vista de configuracion -->
+        <div class="panel"  id="configuracion" title="CONFIGURACION">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <br>
+            <br>
+            </div>
+            <input name="eempresaconf" id="eempresaconf" type="text" placeholder="Nombre de la Empresa" disabled />
+            <input name="edireccionconf" id="edireccionconf" type="text" placeholder="Direccion de la Empresa" disabled />
+            <input name="etelefonosconfi" id="etelefonosconf" type="text" placeholder="Telefono la Empresa" disabled />
+            <input name="ezonaconf" id="ezonaconf" type="text" placeholder= "Zona de la Empresa" disabled />
+            <input name="ecobradorconf" id="ecobradorconf" type="text" placeholder= "Cobrador de la Zona" disabled />
+            <input name="eservidorconf" id="eservidorconf" type="text" placeholder="Servidor" />
+            <input name="eprinterconf" id="eprinterconf" type="text" placeholder="PRINTER MAC ADDRESS" />
+             <!--<div style="width:50%; font-size:32px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; text-align: right; ">Atraso</div>
+            <div style="width:50%; text-align:right; float:left;"><input name="eatrasoconf" id="eatrasoconf" type="number" style="text-align:right; color:red;" /></div>
+            <div style="width:50%; font-size:32px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; text-align: right;  ">Cuota</div>
+            <div style="width:50%; text-align:right; float:left;"><input name="ecuotaconf" id="ecuotaconf" type="number" style="text-align:right; color:orange;"/></div>
+            <div style="width:50%; font-size:32px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; text-align: right;  ">Cobrado</div>
+            <div style="width:50%; text-align:right; float:left;"><input name="ecobradoconf" id="ecobradoconf" type="number" style="text-align:right; color:green;"/></div>
+            <div style="clear:both;"></div>-->
+            <br>
+            <br>
+            <br>
+            <a class="button block" href="#" id="bguardaconf">Guardar</a>
+           <br> 
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+         <!-- Vista de Nota -->
+        <div class="panel"  id="lnota" title="NOTA">
+            <div style="text-align:center">
+            <br>
+            <br>
+            </div>
+            <input name="eprestamon" id="eprestamon" type="text" placeholder="Prestamo" />
+            <input name="enombren" id="enombren" type="text" placeholder="Usuario" />
+            <input name="elatitudn" id="elatitudn" type="text" placeholder="Clave" />
+            <input name="elongitudn" id="elongitudn" type="text" placeholder="Clave" />
+            <textarea id="enotan" name="enotan" cols="30" rows="7"></textarea>
+            <a class="button block" href="#" id="bnota">Guardar</a>
+           <br> 
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+          <!-- Vista de Gastos -->
+        <div class="panel"  id="lgastos" title="GASTOS">
+            <div style="text-align:center">
+            <br>
+            <br>
+            </div>
+            <textarea id="econceptog"></textarea>
+            <input name="emontog" id="emontog" type="text" placeholder="Monto" />
+            <a class="button block" href="#" id="bgastos">Guardar Gasto</a>
+           <br> 
+            <div id="dgastos"></div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+          <!-- Vista de Ingresos -->
+        <div class="panel"  id="lingresos" title="INGRESOS">
+            <div style="text-align:center">
+            <br>
+            <br>
+            </div>
+            <textarea id="econceptoi"></textarea>
+            <input name="emontoi" id="emontoi" type="text" placeholder="Monto" />
+            <a class="button block" href="#" id="bingresos">Guardar Ingreso</a>
+           <br> 
+            <div id="dingresos"></div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+        <!-- Vista Lista de Prestamos -->
+        <div class="panel"  id="lprestamo" title="LISTA DE PRESTAMOS">
+            <div style="text-align:center">
+            
+            <br>
+            <br>
+            </div>
+            <input name="enombrepre" id="enombrepre" type="text" placeholder="Nombre" />
+           <br> 
+            
+            
+           
+           
+            
+        </div>
+        
+         <!-- Vista Reimprimir Recibos -->
+        <div class="panel"  id="lpagos" title="REIMPRIMIR RECIBO">
+            <div style="text-align:center">
+            <br>
+            <br>
+            </div>
+            
+        </div>
+        
+        
+        
+        <!-- Vista del Login -->
+        <div class="panel"  id="signin" title="Sige Movil 0.6">
+            <div style="text-align:center">
+            <br>
+            <br>
+            <p>Iniciar Session</p>
+            <br>
+            <br>
+            </div>
+            <input name="enombre" id="enombre" type="text" placeholder="Usuario" />
+            <input name="eclave" id="eclave" type="password" placeholder="Clave" />
+            <a class="button block" href="#" id="login">Login</a>
+           <br> 
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+        
+        
+        
+        
+         <!-- Vista de Pago -->
+        <div class="panel"  id="pago" title="PAGO">
+            <br>
+            <input name="eprestamop" id="eprestamop" type="hidden"  />
+            <div style="width:100%; text-align:center; background-color:#000; color:#FFF; font-size:20px;" id="enombrepd"></div>
+            <div style="width:60%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eprestadop">  </div> 
+            <div style="width:40%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="etelefonop">809-588-4457</div>
+            <div style="text-align:center; font-size:12px; border:1px; border-style:solid;" id="edireccionp"></div>
+            <br>
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">CUOTA:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="ecactual"> </div>
+            
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">MONTO:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="emontocuo"> </div>
+            
+            
+            <br>
+            
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">PLAZO:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eplazop"> </div>
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">ABONO:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eabonop"> </div>
+            
+            
+            
+            <br>
+            
+            <div style="width:30%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">ATRASOS:</div>
+            
+            <div style="width:20%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="eatrasosp"> </div>
+            
+            <div style="width:20%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">VENCE:</div>
+            
+            <div style="width:30%; text-align:center; font-size:16px; float:left; border:1px; border-style:solid;" id="evencep"> </div>
+            
+            <br>
+            <br>
+            
+          
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">BALANCE DE SALDO :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; background-color: #DADADA;" id="esaldop"> </div>
+           
+            <br>
+            <br>
+            <div style="font-size:16px; border:1px; border-style:solid; background-color:#61B0F0; height:100px; clear:both; " >
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">TOTAL EN ATRASO :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; color: #FB0000;" id="etotalatrasop"> </div>
+                
+            <br>
+            
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">MORA :</div>
+            <div style="width:50%; font-size:16px; float:left; border:1px; border-style:solid; text-align: right; color:" id="emorap"> </div>
+        
+            <br>
+            
+            <div style="width:50%; font-size:20px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; ">TOTAL A PAGAR :</div>
+            <div style="width:50%; font-size:20px; float:left; border:1px; border-style:solid; text-align: right; color:#1C945A" id="etotalp"> </div>
+                          
+            </div>
+            
+            <input name="evencido" id="evencido" type="hidden"/>
+            <input name="emora" id="emora" type="hidden"  />
+            <input name="etotal" id="etotal" type="hidden"  />
+            <input name="enombrep" id="enombrep" type="hidden"  />
+            <br>
+             <div style="width:30%; font-size:32px; float:left; border:1px; border-style:solid; background-color:#000; color:#FFF; text-align: right; ">$</div>
+            <div style="width:70%; text-align:right; float:left;"><input name="epago" id="epago" type="number" style="text-align:right;"/></div>
+                
+            <div> 
+            <br>
+            <br>
+            <br>
+            <br>
+            <p>
+            <a class="button block" href="#" id="bpagar">Pagar e Imprimir</a>
+           </p> 
+                
+        </div>
+            <!--<input name="eletra" id="eletra" type="number" placeholder="Letra" />
+            <input name="esize" id="esize" type="number" placeholder="Tamaño" />
+            
+             <a class="button block green" href="#" id="probar">Imprimir</a>*/-->
+            
+           
+           
+            
+        </div>
+
+</div>
+<input name="eempresa" id="eempresa" type="hidden" value='' />
+<input name="edireccion" id="edireccion" type="hidden" value='' />
+<input name="etelefonos" id="etelefonos" type="hidden" value='' />
+<input name="ezona" id="ezona" type="hidden" value='' />
+    <input name="ecobrador" id="ecobrador" type="hidden" value='' />
+<input name="eservidor" id="eservidor" type="hidden" value='' />
+<input name="eprinter" id="eprinter" type="hidden" value='' />
+<input name="euuid" id="euuid" type="hidden" value='' />
+<input name="ecuotap" id="ecuotap" type="hidden" value='' />
+
+
+    
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+<!--
+    This template can be used for creating apps that require user login and user registration before starting actual app.
+--> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="materialize/css/materialize.css" />
+    <link rel="stylesheet" type="text/css" href="css/alertify.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/themes/default.min.css" />
+    
+    <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/alertify.min.js"></script> 
+    <script type="text/javascript" charset="utf-8" src="materialize/js/materialize.min.js"></script>
+    
+
+    
+
+    <!-- phantom library, needed for XDK "legacy" container api calls -->
+    <script src="intelxdk.js"></script>
+    <!-- phantom library, needed for Cordova api calls -->
+    <script src="cordova.js"></script>
+    <!-- phantom library, needed for XDK "legacy" container CORS -->
+    <script src="xhr.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/inicio.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/configuracion.js"></script>
+    <script src="js/cxc.js"></script>
+    <script src="js/sincronizar.js"></script>
+    <script src="js/impresion.js"></script>
+    <script src="js/gastos.js"></script>
+    <script src="js/ingresos.js"></script>
+    <script>
+        $(document).ready(function() {
+             inicializa(0);
+           
+        });
+        function administracion()
+        {
+            $('#contenedor').load('admin.html');
+            $('.fixed-action-btn').closeFAB();
+            //$('.button-collapse').sideNav('hide');
+        }
+        function menuadmin()    
+        {
+            $('#contenedor').load('menuadmin.html');
+           //$('.button-collapse').sideNav('hide');
+            
+        }
+        function importar()
+        {
+            $('#contenedor').load('importar.html');
+            //$('.button-collapse').sideNav('hide');
+            
+        }
+        function cxc()
+        {
+            $('#contenedor').load('cxc.html');
+            $('.fixed-action-btn').closeFAB();
+            //$('.button-collapse').sideNav('hide');
+            
+        }
+        function entra_configuracion()
+        {
+            $('#contenedor').load('configuracion.html');
+            $('.fixed-action-btn').closeFAB();
+            //$('.button-collapse').sideNav('hide');
+            
+        }
+        function entra_reimprimir()
+        {
+            $('#contenedor').load('reimprimir.html');
+            $('.fixed-action-btn').closeFAB();
+            //$('.button-collapse').sideNav('hide');
+            
+        }
+        function entra_exportar()
+        {
+            $('#contenedor').load('exportar.html');
+           
+        }
+    </script>
+    <style>
+        .icon-block 
+        {
+            padding: 0 15px;
+        }
+        .icon-block .material-icons 
+        {
+	       font-size: inherit;
+        }
+         body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+    </style>
+</head>
+
+<body>
+
+<nav class="blue" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">SIGE MOVIL 1.0</a>
+      
+    <div class="fixed-action-btn vertical click-to-toggle">
+    <a class="btn-floating btn-large red pulse">
+    <p>
+      <img src="icon/navbar.png" />
+    </p>
+    </a>
+    <ul>
+      <li><a class="btn-floating btn-large red" href="javascript:cxc();"><img src="icon/cxc.png"/></a></li>
+      <li><a class="btn-floating btn-large yellow darken-1" href="javascript:entra_reimprimir();"><img src="icon/printw.png"/></a></li>
+      <li><a class="btn-floating green" href="javascript:administracion();"><img src="icon/adminx.png"/></a></li>
+      <li><a class="btn-floating blue" href="javascript:entra_configuracion();"><img src="icon/confi.png"/></a></li>
+    </ul>
+  </div>    
+        
+        
+        
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">-</a></li>
+      </ul>
+
+      <!--<ul id="nav-mobile" class="side-nav">
+          
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img src="vertical-center.png">
+                </div>
+                <a href="#!user"><img class="circle" src="logo.JPG"></a>
+                <h5 class="white-text">MENU</h5>
+            </div>
+        </li>  
+          
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img src="vertical-center.png">
+                </div>
+                
+            </div>
+        </li>  
+          
+        <li><a href="javascript:cxc();"><img src="icon/cxc.png"/> CUENTAS POR COBRAR</a></li>
+        <li><a href="javascript:entra_reimprimir();"><img src="icon/print.png"/> REIMPRIMIR RECIBO</a></li>
+        <li><a href="javascript:administracion();"><img src="icon/admin.png"/> ADMINISTRACION</a></li>
+        <li><a href="#"><img src="icon/gastos.png"/> GASTOS</a></li>
+        <li><a href="javascript:entra_configuracion();"><img src="icon/confi.png"/> CONFIGURACION</a></li>
+      </ul>-->
+      
+      <!--<a href="#" data-activates="nav-mobile" class="button-collapse"><img src="icon/navbar.png"/> </a>-->
+    </div>
+  </nav>
+ <main>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container" id="contenedor">
+          
+    </div>
+  </div>
+ </main>
+  <footer class="page-footer blue">
+<!--  <textarea id="comandos" cols="30" rows="20" class="materialize-textarea"></textarea>
+        
+ <button class="btn waves-effect blue"   onclick="imprifull();" >IMPRIMIR</button>      -->
+      
+      
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <img class="circle" src="logo.JPG" width="50" height="50" >
+          <span class="white-text">ING. LUIS NOEL ESPINOLA</span>
+            <br>
+          <span class="grey-text text-lighten-4">TELF.: 849-210-4457 / 849-401-8680</span>
+
+        </div>
+        
+      </div>
+    </div>
+  </footer>
+  
+<input type="hidden" id="eempresa" value="" />
+<input type="hidden" id="edireccion" value="" />
+<input type="hidden" id="etelefonos" value="" />
+<input type="hidden" id="ecobrador" value="" />
+<input type="hidden" id="ezona" value="" />    
+<input type="hidden" id="eservidor" value="http://192.168.1.28/sige" />
+<input type="hidden" id="eprinter" value="" />
+    
+    
+
+   
+<input type="hidden" id="eidpre" value="" />
+<input type="hidden" id="eclientepre" value="" />
+<input type="hidden" id="emontopre" value="" />
+<input type="hidden" id="ecuotapre" value="" />
+<input type="hidden" id="emxdpre" value="" />    
+<input type="hidden" id="edireccionpre" value="" />
+<input type="hidden" id="etelefonopre" value="" />
+<input type="hidden" id="ep" value="0" />
+<input type="hidden" id="esaldopre" value="0" />
+
+    
+</body>
+</html>

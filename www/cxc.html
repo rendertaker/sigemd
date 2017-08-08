@@ -1,0 +1,31 @@
+<html>
+<body>
+<head>
+<style>
+    .azul {color:blue;}
+    .negro {color:black;}
+    
+    </style>
+<script>
+    $('#enombre').on('keyup', function(e) {
+                var mEvent = e || window.event;
+                var mPressed = mEvent.keyCode || mEvent.which;
+                if (mPressed == 13) {
+                    
+                    busca_prestamo();
+                    return false;
+                } 
+                return true;
+            });
+</script>
+</head>
+<div class="row">
+    <div class="input-field col s12">
+        <input value="" id="enombre" type="text" class="validate">
+        <label for="enombre">Cliente</label>
+    </div>
+</div>
+
+<div id="dcxc"></div>
+</body>
+</html>

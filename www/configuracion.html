@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>Login</title>
+    <script>
+        var db = window.openDatabase("sige", "0.1", "base de datos local", 65535); 
+        $(document).ready(function() {
+           db.transaction(llena_confi, errordb); 
+           
+        });
+        
+        
+        function llena_confi(tx)
+        {
+            
+             tx.executeSql("SELECT * FROM configuracion",[],function(tx, resultado)
+                {
+                   
+                   
+                    eempresaconf.value = resultado.rows.item(0).Empresa;
+                    
+                   
+                    edireccionconf.value = resultado.rows.item(0).Direccion;
+                    
+                    
+                    etelefonosconf.value = resultado.rows.item(0).Telefonos;
+                 
+                   
+                    ezonaconf.value = resultado.rows.item(0).Zona;
+                                      
+                  
+                    ecobradorconf.value = resultado.rows.item(0).Cobrador;
+        
+                   
+                    eservidorconf.value = resultado.rows.item(0).Servidor;
+                 
+                   
+                    eprinterconf.value = resultado.rows.item(0).Printer;
+                     
+                   
+                                   
+                },errordb);
+            
+            
+        }
+    </script>
+</head>
+<body>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="eempresaconf" id="eempresaconf" type="text" placeholder="EMPRESA"  disabled />
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="edireccionconf" id="edireccionconf" type="text" placeholder="DIRECCION" disabled />
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s12">
+        <input name="etelefonosconfi" id="etelefonosconf" type="text" disabled placeholder="TELEFONO" />
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="ezonaconf" id="ezonaconf" type="text" disabled placeholder="ZONA" />
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="ecobradorconf" id="ecobradorconf" type="text"  disabled placeholder="COBRADOR" />
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="eservidorconf" id="eservidorconf" type="text"  class="validate" placeholder="SERVIDOR" />
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <input name="eprinterconf" id="eprinterconf" type="text"  class="validate" placeholder="PRINTER MAC ADDRESS" />
+    </div>
+</div>
+    
+<p align="center">
+        <button class="btn waves-effect blue"   onclick="guarda_configuracion();">GUARDAR</button>
+</p>    
+    
+</body>
+</html>
+
+
+            
+            
+            
+            
+            
+            
